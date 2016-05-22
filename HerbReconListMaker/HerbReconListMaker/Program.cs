@@ -105,10 +105,13 @@ namespace HerbReconListMaker
             }
             File.WriteAllText("Output\\HerbsFormatted.json", JsonConvert.SerializeObject(collection, Formatting.Indented));
             File.WriteAllText("Output\\Herbs.json", JsonConvert.SerializeObject(collection, Formatting.None));
-            var md5 =
-                BitConverter.ToString(MD5.Create().ComputeHash(new FileStream("Output\\Herbs.json", FileMode.Open)))
-                    .Replace("-", "").ToLower();
-            File.WriteAllText("Output\\md5.txt", md5);
+            using (var fs = new FileStream("Output\\Herbs.json", FileMode.Open))
+            {
+                var md5 =
+                    BitConverter.ToString(MD5.Create().ComputeHash(fs))
+                        .Replace("-", "").ToLower();
+                File.WriteAllText("Output\\md5.txt", md5);
+            }
             Console.WriteLine("Everything written to the Output folder.");
         }
 
