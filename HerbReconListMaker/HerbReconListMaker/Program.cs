@@ -62,9 +62,6 @@ namespace HerbReconListMaker
             while (!sr.EndOfStream) {
                 var herb = new Herb();
                 var wholeName = sr.ReadLine();
-                var split = wholeName.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                herb.Genus = split[0];
-                herb.Species = split.Skip(1).Aggregate((a, n) => a + " " + n);
                 var results = WikipediaApiUtil.Search(wholeName);
                 if (results == null) {
                     Console.ForegroundColor = ConsoleColor.Red;
@@ -81,6 +78,9 @@ namespace HerbReconListMaker
                         results.Select(r => $"{r.Title}\n\t{r.Summary}").ToArray());
                     title = results[selection].Title;
                 }
+                var split = title.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                herb.Genus = split[0].ToLower();
+                herb.Species = string.Join(" ", split.Skip(1).ToArray()).ToLower();
                 var page = WikipediaApiUtil.GetPageContentInJson(title);
                 var taxobox = page["query"]["pages"].First.First["revisions"][0]["*"].ToString();
                 var taxoboxRegex = new Regex(@"čeleď = [\[]*(?<family>[^\] ]+)[\]]*[\s\S]*binomické jméno = (?<latin>[a-zA-z ]*)");
