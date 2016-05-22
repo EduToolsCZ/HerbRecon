@@ -6,20 +6,20 @@ namespace HerbLib
     [JsonObject(MemberSerialization.OptIn)]
     public class Herb
     {
-        private ulong id = 0;
+        private ulong _id;
 
         /// <summary>
-        ///     Unique identification number of the herb
+        ///     The identification number of the herb, based on its Genus and Species
         /// </summary>
-        [JsonProperty(PropertyName = "id")]
+        [JsonProperty(PropertyName = "_id")]
         public ulong Id
         {
             get
             {
-                if (id == 0) {
+                if (_id == 0) {
                     ResolveId();
                 }
-                return id;
+                return _id;
             }
         }
 
@@ -57,7 +57,7 @@ namespace HerbLib
 
         private void ResolveId()
         {
-            id = (ulong)(Genus.GetHashCode() ^ Species.GetHashCode()) | (ulong)r.Next(int.MaxValue);
+            _id = (ulong) (Genus.GetHashCode() & Species.GetHashCode());
         }
     }
 }
