@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using HerbLib;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace HerbReconListMaker
 {
@@ -96,17 +97,25 @@ namespace HerbReconListMaker
                 herb.LatinName = latinName;
 
                 // TODO: Fetch images
-                herb.ImageUrls = null;
+                var images = page["query"]["pages"].First.First["images"].Value<JArray>();
+                if (images.Count > 0) {
+                    herb.ImageUrls = images.Where(t =>
+                    {
+                        var tt = t["title"].ToString();
+                        return tt.EndsWith(".jpg") | tt.EndsWith(".png") | tt.EndsWith(".bmp");
+                    }).Select(t => WikipediaApiUtil.GetWikipediaImageUrl(t["title"].ToString())).ToArray();
+                }
+                else {
+                    herb.ImageUrls = null;
+                }
                 collection.Herbs.Add(herb);
             }
-            if (!Directory.Exists("Output"))
-            {
+            if (!Directory.Exists("Output")) {
                 Directory.CreateDirectory("Output");
             }
             File.WriteAllText("Output\\HerbsFormatted.json", JsonConvert.SerializeObject(collection, Formatting.Indented));
             File.WriteAllText("Output\\Herbs.json", JsonConvert.SerializeObject(collection, Formatting.None));
-            using (var fs = new FileStream("Output\\Herbs.json", FileMode.Open))
-            {
+            using (var fs = new FileStream("Output\\Herbs.json", FileMode.Open)) {
                 var md5 =
                     BitConverter.ToString(MD5.Create().ComputeHash(fs))
                         .Replace("-", "").ToLower();

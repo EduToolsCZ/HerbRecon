@@ -71,6 +71,17 @@ namespace HerbReconListMaker
         }
 
         /// <summary>
+        /// Returns the url requesting for the image url
+        /// </summary>
+        /// <param name="image"></param>
+        /// <returns></returns>
+        private static string GetImageUrl(string image)
+        {
+            return
+                $"https://cs.wikipedia.org/w/api.php?action=query&titles={image}&prop=imageinfo&iiprop=url&format=json";
+        }
+
+        /// <summary>
         ///     Returns max. 10 titles of Wikipedia pages found when searching for the <paramref name="searchTerm" />
         /// </summary>
         /// <param name="searchTerm">The term to search for on Wikipedia</param>
@@ -101,6 +112,19 @@ namespace HerbReconListMaker
         public static JObject GetPageContentInJson(string title)
         {
             return JObject.Parse(WikipediaGetRequest(GetContentUrl(title)));
+        }
+
+        /// <summary>
+        /// Gets the url of an image.
+        /// </summary>
+        /// <param name="imageTitle">The Wikipedia Image title</param>
+        /// <returns></returns>
+        public static string GetWikipediaImageUrl(string imageTitle)
+        {
+            var url = GetImageUrl(imageTitle);
+            var imageResponse = WikipediaGetRequest(url);
+            var imageUrl = JObject.Parse(imageResponse)["query"]["pages"]["-1"]["imageinfo"][0]["url"].ToString();
+            return imageUrl;
         }
     }
 
