@@ -60,9 +60,11 @@ namespace HerbReconListMaker
             }
             var sr = new StreamReader(path);
             var collection = new HerbCollection();
+            // probíhá pro každou řádku souboru
             while (!sr.EndOfStream) {
                 var herb = new Herb();
                 var wholeName = sr.ReadLine();
+                // prohledá Wikipedii
                 var results = WikipediaApiUtil.Search(wholeName);
                 if (results == null) {
                     Console.ForegroundColor = ConsoleColor.Red;
@@ -71,18 +73,23 @@ namespace HerbReconListMaker
                     continue;
                 }
                 string title;
+                // pokud je jen jeden výsledek vyhledávání, použijeme jej
                 if (results.Length == 1) {
                     title = results[0].Title;
                 }
+                // jinak necháme uživatele vybrat správný článek
                 else {
                     var selection = SelectFromMultipleOptions("Choose the right Wikipedia article for the herb " + wholeName,
                         results.Select(r => $"{r.Title}\n\t{r.Summary}").ToArray());
                     title = results[selection].Title;
                 }
+                // vybereme rodové a druhové jméno byliny pomocí titulku vybraného Wikipedia článku
                 var split = title.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 herb.Genus = split[0].ToLower();
                 herb.Species = string.Join(" ", split.Skip(1).ToArray()).ToLower();
+                // získáme obsah Wikipedia článku
                 var page = WikipediaApiUtil.GetPageContentInJson(title);
+                // nalezne v pravém boxu informace o bylině - čeleď a latinské jméno
                 var taxobox = page["query"]["pages"].First.First["revisions"][0]["*"].ToString();
                 var taxoboxRegex = new Regex(@"čeleď = [\[]*(?<family>[^\] ]+)[\]]*[\s\S]*binomické jméno = (?<latin>[a-zA-z ]*)");
                 var match = taxoboxRegex.Match(taxobox);
@@ -95,10 +102,10 @@ namespace HerbReconListMaker
                 herb.Family = family;
                 var latinName = string.IsNullOrEmpty(match.Groups["latin"].Value) ? null : match.Groups["latin"].Value;
                 herb.LatinName = latinName;
-
-                // TODO: Fetch images
+                // získáme obrázky
                 var images = page["query"]["pages"].First.First["images"].Value<JArray>();
                 if (images.Count > 0) {
+                    // požadujeme jen obrázky s příponami .jpg, .png, .bmp-
                     herb.ImageUrls = images.Where(t =>
                     {
                         var tt = t["title"].ToString();
@@ -113,9 +120,11 @@ namespace HerbReconListMaker
             if (!Directory.Exists("Output")) {
                 Directory.CreateDirectory("Output");
             }
+            // uloží získaná data
             File.WriteAllText("Output\\HerbsFormatted.json", JsonConvert.SerializeObject(collection, Formatting.Indented));
             File.WriteAllText("Output\\Herbs.json", JsonConvert.SerializeObject(collection, Formatting.None));
             using (var fs = new FileStream("Output\\Herbs.json", FileMode.Open)) {
+                // uloží MD5 daného souboru v hexadecimálníím formátu 0x0x
                 var md5 =
                     BitConverter.ToString(MD5.Create().ComputeHash(fs))
                         .Replace("-", "").ToLower();
