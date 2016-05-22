@@ -11,7 +11,7 @@ namespace HerbLib
         /// <summary>
         ///     The identification number of the herb, based on its Genus and Species
         /// </summary>
-        [JsonProperty(PropertyName = "_id")]
+        [JsonProperty(PropertyName = "id")]
         public ulong Id
         {
             get
