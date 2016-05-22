@@ -79,8 +79,10 @@ namespace HerbReconListMaker
         {
             var url = GetSearchUrl(searchTerm);
             var array = JArray.Parse(WikipediaGetRequest(url));
-            var pages = new WikipediaPageInfo[array[1].Value<JArray>().Count];
-            for (int i = 0; i < pages.Length; i++) {
+            var length = array[1].Value<JArray>().Count;
+            if (length == 0) return null;
+            var pages = new WikipediaPageInfo[length];
+            for (int i = 0; i < length; i++) {
                 pages[i] = new WikipediaPageInfo()
                 {
                     Title = array[1][i].Value<string>(),

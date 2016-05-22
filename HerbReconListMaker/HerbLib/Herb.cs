@@ -1,15 +1,27 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 
 namespace HerbLib
 {
     [JsonObject(MemberSerialization.OptIn)]
     public class Herb
     {
+        private ulong id = 0;
+
         /// <summary>
         ///     Unique identification number of the herb
         /// </summary>
         [JsonProperty(PropertyName = "id")]
-        public ulong Id { get; set; }
+        public ulong Id
+        {
+            get
+            {
+                if (id == 0) {
+                    ResolveId();
+                }
+                return id;
+            }
+        }
 
         /// <summary>
         ///     The genus of the herb (rod)
@@ -40,5 +52,12 @@ namespace HerbLib
         /// </summary>
         [JsonProperty(PropertyName = "images")]
         public string[] ImageUrls { get; set; }
+
+        private static readonly Random r = new Random();
+
+        private void ResolveId()
+        {
+            id = (ulong)(Genus.GetHashCode() ^ Species.GetHashCode()) | (ulong)r.Next(int.MaxValue);
+        }
     }
 }
