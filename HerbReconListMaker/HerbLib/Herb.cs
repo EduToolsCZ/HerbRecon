@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace HerbLib
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public class Herb
+    public class Herb : ICloneable
     {
         private ulong _id;
 
@@ -51,13 +52,33 @@ namespace HerbLib
         ///     The collection of image URLs for the herb
         /// </summary>
         [JsonProperty(PropertyName = "images")]
-        public string[] ImageUrls { get; set; }
-
-        private static readonly Random r = new Random();
+        public List<string> ImageUrls { get; set; }
 
         private void ResolveId()
         {
-            _id = (ulong) (Genus.GetHashCode() & Species.GetHashCode());
+            _id = (ulong)(Genus.GetHashCode() & Species.GetHashCode());
+        }
+
+        public override string ToString()
+        {
+            return $"{Genus} {Species}";
+        }
+
+        public object Clone()
+        {
+            var h = new Herb
+            {
+                Genus = Genus,
+                Species = Species,
+                Family = Family,
+                LatinName = LatinName,
+                ImageUrls = new List<string>()
+            };
+            if (ImageUrls != null && ImageUrls.Count > 0)
+                foreach (var imageUrl in ImageUrls) {
+                    h.ImageUrls.Add(imageUrl);
+                }
+            return h;
         }
     }
 }

@@ -12,6 +12,8 @@ namespace HerbReconListMaker
 {
     internal class Program
     {
+        private static HerbChecker herbChecker;
+
         [STAThread]
         private static void Main(string[] args)
         {
@@ -39,11 +41,7 @@ namespace HerbReconListMaker
                         Fetch(parameters[0]);
                         break;
                     case "check":
-                        if (parameters.Length < 1) {
-                            Console.WriteLine("You have to pass a file as the parameter");
-                            break;
-                        }
-                        Check(parameters[0]);
+                        Check();
                         break;
                     default:
                         Console.WriteLine("No command found. Use 'help'");
@@ -114,7 +112,7 @@ namespace HerbReconListMaker
                     {
                         var tt = t["title"].ToString();
                         return tt.EndsWith(".jpg") | tt.EndsWith(".png") | tt.EndsWith(".bmp");
-                    }).Select(t => WikipediaApiUtil.GetWikipediaImageUrl(t["title"].ToString())).ToArray();
+                    }).Select(t => WikipediaApiUtil.GetWikipediaImageUrl(t["title"].ToString())).ToList();
                 }
                 else {
                     herb.ImageUrls = null;
@@ -137,14 +135,19 @@ namespace HerbReconListMaker
             Console.WriteLine("Everything written to the Output folder.");
         }
 
-        private static void Check(string path)
+        private static void Check()
         {
-            if (!File.Exists(path)) {
-                Console.WriteLine("File not found.");
-                return;
+            if (herbChecker == null)
+            {
+                Application.EnableVisualStyles();
+                herbChecker = new HerbChecker();
+                Application.Run(herbChecker);
             }
-            Application.EnableVisualStyles();
-            Application.Run(new HerbChecker(JsonConvert.DeserializeObject<HerbCollection>(File.ReadAllText(path))));
+            else
+            {
+                herbChecker = new HerbChecker();
+                herbChecker.ShowDialog();
+            }
         }
 
         private static int SelectFromMultipleOptions(string message, string[] options)
