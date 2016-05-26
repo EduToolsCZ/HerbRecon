@@ -70,6 +70,10 @@ namespace HerbReconListMaker
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Herb not found: " + wholeName);
                     Console.ResetColor();
+                    var names = wholeName.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    herb.Genus = names[0];
+                    herb.Species = names.Skip(1).Aggregate((a, n) => a + " " + n);
+                    collection.Herbs.Add(herb);
                     continue;
                 }
                 string title;
