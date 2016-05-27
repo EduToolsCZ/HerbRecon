@@ -4,20 +4,24 @@ using Newtonsoft.Json;
 
 namespace HerbLib
 {
+    /// <summary>
+    ///     Represents a herb
+    /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
     public class Herb : ICloneable
     {
-        private ulong _id;
+        private uint _id;
 
         /// <summary>
         ///     The identification number of the herb, based on its Genus and Species
         /// </summary>
         [JsonProperty(PropertyName = "id")]
-        public ulong Id
+        public uint Id
         {
             get
             {
-                if (_id == 0) {
+                if (_id == 0)
+                {
                     ResolveId();
                 }
                 return _id;
@@ -54,16 +58,6 @@ namespace HerbLib
         [JsonProperty(PropertyName = "images")]
         public List<string> ImageUrls { get; set; }
 
-        private void ResolveId()
-        {
-            _id = (ulong)(Genus.GetHashCode() & Species.GetHashCode());
-        }
-
-        public override string ToString()
-        {
-            return $"{Genus} {Species}";
-        }
-
         public object Clone()
         {
             var h = new Herb
@@ -75,10 +69,27 @@ namespace HerbLib
                 ImageUrls = new List<string>()
             };
             if (ImageUrls != null && ImageUrls.Count > 0)
-                foreach (var imageUrl in ImageUrls) {
+                foreach (var imageUrl in ImageUrls)
+                {
                     h.ImageUrls.Add(imageUrl);
                 }
             return h;
+        }
+
+        /// <summary>
+        ///     Computes the ID of the herb from its genus and species properties
+        /// </summary>
+        private void ResolveId()
+        {
+            int genusCode = 0, speciesCode = 0;
+            if (!string.IsNullOrWhiteSpace(Genus)) genusCode = Genus.GetHashCode();
+            if (!string.IsNullOrWhiteSpace(Species)) speciesCode = Species.GetHashCode();
+            _id = (uint) (genusCode & speciesCode);
+        }
+
+        public override string ToString()
+        {
+            return $"{Genus} {Species}";
         }
     }
 }

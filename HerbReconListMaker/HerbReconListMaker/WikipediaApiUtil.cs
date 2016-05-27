@@ -1,8 +1,5 @@
-﻿using System;
-using System.Globalization;
-using System.IO;
+﻿using System.IO;
 using System.Net;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json.Linq;
 
 namespace HerbReconListMaker
@@ -16,7 +13,8 @@ namespace HerbReconListMaker
             @"HerbReconListMaker/1.0 (https://www.github.io/StudentToolsGroup/HerbRecon) NetFramework/4.5";
 
         /// <summary>
-        ///     Edits the <paramref name="wr"/> UserAgent to be the application one and sets the method of the HTTP request to GET.
+        ///     Edits the <paramref name="wr" /> UserAgent to be the application one and sets the method of the HTTP request to
+        ///     GET.
         /// </summary>
         /// <param name="wr"></param>
         private static void SetupRequestForWikipediaGet(HttpWebRequest wr)
@@ -33,11 +31,12 @@ namespace HerbReconListMaker
         /// <returns></returns>
         private static string WikipediaGetRequest(string url, bool followRedirects = true)
         {
-            var request = (HttpWebRequest)WebRequest.Create(url);
+            var request = (HttpWebRequest) WebRequest.Create(url);
             SetupRequestForWikipediaGet(request);
             var response = request.GetResponse();
-            while (followRedirects && response.Headers["Location"] != null) {
-                request = (HttpWebRequest)WebRequest.Create(response.Headers["Location"]);
+            while (followRedirects && response.Headers["Location"] != null)
+            {
+                request = (HttpWebRequest) WebRequest.Create(response.Headers["Location"]);
                 SetupRequestForWikipediaGet(request);
                 response = request.GetResponse();
             }
@@ -71,7 +70,7 @@ namespace HerbReconListMaker
         }
 
         /// <summary>
-        /// Returns the url requesting for the image url
+        ///     Returns the url requesting for the image url
         /// </summary>
         /// <param name="image"></param>
         /// <returns></returns>
@@ -93,8 +92,9 @@ namespace HerbReconListMaker
             var length = array[1].Value<JArray>().Count;
             if (length == 0) return null;
             var pages = new WikipediaPageInfo[length];
-            for (int i = 0; i < length; i++) {
-                pages[i] = new WikipediaPageInfo()
+            for (var i = 0; i < length; i++)
+            {
+                pages[i] = new WikipediaPageInfo
                 {
                     Title = array[1][i].Value<string>(),
                     Summary = array[2][i].Value<string>(),
@@ -105,7 +105,7 @@ namespace HerbReconListMaker
         }
 
         /// <summary>
-        ///     Gets the taxobox and images in JSON from the Wikipedia page identified with <paramref name="title"/>.
+        ///     Gets the taxobox and images in JSON from the Wikipedia page identified with <paramref name="title" />.
         /// </summary>
         /// <param name="title">The title of the page</param>
         /// <returns></returns>
@@ -115,7 +115,7 @@ namespace HerbReconListMaker
         }
 
         /// <summary>
-        /// Gets the url of an image.
+        ///     Gets the url of an image.
         /// </summary>
         /// <param name="imageTitle">The Wikipedia Image title</param>
         /// <returns></returns>
@@ -137,12 +137,14 @@ namespace HerbReconListMaker
         ///     The title of the page, i.e. the name
         /// </summary>
         public string Title { get; set; }
+
         /// <summary>
         ///     The whole URL to the page
         /// </summary>
         public string Url { get; set; }
+
         /// <summary>
-        /// Summary of the article, used in Google for example.
+        ///     Summary of the article, used in Google for example.
         /// </summary>
         public string Summary { get; set; }
     }

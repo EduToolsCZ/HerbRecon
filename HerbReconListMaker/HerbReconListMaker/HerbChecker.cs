@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using HerbLib;
 using Newtonsoft.Json;
@@ -16,18 +10,19 @@ namespace HerbReconListMaker
 {
     public partial class HerbChecker : Form
     {
-        HerbCollection _originalCollection = new HerbCollection();
+        /// <summary>
+        ///     The herb which is actually showing
+        /// </summary>
+        private Herb _actualHerb;
+
+        private int _actualImageIndex = -1;
         private HerbCollection _newCollection = new HerbCollection();
+        private HerbCollection _originalCollection = new HerbCollection();
+
         public HerbChecker()
         {
             InitializeComponent();
         }
-
-        /// <summary>
-        /// The herb which is actually showing
-        /// </summary>
-        private Herb _actualHerb;
-        private int _actualImageIndex = -1;
 
         private void SaveActualHerb()
         {
@@ -45,23 +40,27 @@ namespace HerbReconListMaker
             txt_family.Text = _actualHerb.Family;
             txt_latinName.Text = _actualHerb.LatinName;
             txt_id.Text = _actualHerb.Id.ToString();
-            if (_actualHerb.ImageUrls != null && _actualHerb.ImageUrls.Any()) {
+            if (_actualHerb.ImageUrls != null && _actualHerb.ImageUrls.Any())
+            {
                 _actualImageIndex = 0;
-
             }
-            else {
+            else
+            {
                 _actualImageIndex = -1;
             }
             RefreshImage();
         }
+
         private void RefreshImage()
         {
-            if (_actualImageIndex >= 0) {
+            if (_actualImageIndex >= 0)
+            {
                 var selectedUrl = _actualHerb.ImageUrls[_actualImageIndex];
                 picture_herb.ImageLocation = selectedUrl;
                 txt_imageUrl.Text = selectedUrl;
             }
-            else {
+            else
+            {
                 picture_herb.Image = null;
                 txt_imageUrl.Text = "";
             }
@@ -72,15 +71,18 @@ namespace HerbReconListMaker
             combo_herb.Items.Clear();
             combo_missingHerbs.Items.Clear();
             combo_missingHerbs.SelectedIndex = -1;
-            foreach (var herb in _newCollection.Herbs) {
+            foreach (var herb in _newCollection.Herbs)
+            {
                 if (string.IsNullOrEmpty(herb.Family) || string.IsNullOrEmpty(herb.LatinName) || herb.ImageUrls == null ||
-                    herb.ImageUrls.Count == 0) {
+                    herb.ImageUrls.Count == 0)
+                {
                     combo_missingHerbs.Items.Add(herb);
                     combo_missingHerbs.SelectedIndex = 0;
                 }
                 combo_herb.Items.Add(herb);
             }
-            if (combo_herb.Items.Count == 0) {
+            if (combo_herb.Items.Count == 0)
+            {
                 ShowError("No herbs were found.");
                 Close();
             }
@@ -88,7 +90,7 @@ namespace HerbReconListMaker
         }
 
         /// <summary>
-        /// Shows an error as a dialog with the served <paramref name="message"/>
+        ///     Shows an error as a dialog with the served <paramref name="message" />
         /// </summary>
         /// <param name="message"></param>
         private void ShowError(string message)
@@ -98,13 +100,14 @@ namespace HerbReconListMaker
 
         private void SaveAndClose()
         {
-            var fbd = new FolderBrowserDialog()
+            var fbd = new FolderBrowserDialog
             {
                 ShowNewFolderButton = true,
                 SelectedPath = Environment.CurrentDirectory,
                 Description = "Select a folder"
             };
-            if (fbd.ShowDialog() != DialogResult.OK || string.IsNullOrWhiteSpace(fbd.SelectedPath)) {
+            if (fbd.ShowDialog() != DialogResult.OK || string.IsNullOrWhiteSpace(fbd.SelectedPath))
+            {
                 return;
             }
             var directory = fbd.SelectedPath;
@@ -114,7 +117,8 @@ namespace HerbReconListMaker
             File.WriteAllText(Path.Combine(directory, "HerbsFormatted.json"), json);
             var md5 = Program.GetFileMd5(Path.Combine(directory, "Herbs.json"));
             File.WriteAllText(Path.Combine(directory, "md5.txt"), md5);
-            if (check_openDirAfterClose.Checked) {
+            if (check_openDirAfterClose.Checked)
+            {
                 Process.Start("explorer.exe", directory);
             }
             Close();
@@ -129,7 +133,8 @@ namespace HerbReconListMaker
                 InitialDirectory = Environment.CurrentDirectory,
                 Filter = "Json files|*.json|All files|*.*"
             };
-            if (ofd.ShowDialog() != DialogResult.OK) {
+            if (ofd.ShowDialog() != DialogResult.OK)
+            {
                 Close();
                 return;
             }
@@ -144,7 +149,8 @@ namespace HerbReconListMaker
 
         private void but_removeImage_Click(object sender, EventArgs e)
         {
-            if (_actualHerb.ImageUrls.Count - 1 >= _actualImageIndex && _actualImageIndex >= 0) {
+            if (_actualHerb.ImageUrls.Count - 1 >= _actualImageIndex && _actualImageIndex >= 0)
+            {
                 _actualHerb.ImageUrls.RemoveAt(_actualImageIndex);
                 _actualImageIndex = 0;
                 RefreshImage();
@@ -158,17 +164,20 @@ namespace HerbReconListMaker
 
         private void but_reloadAll_Click(object sender, EventArgs e)
         {
-            var dr = MessageBox.Show("Are you sure to reload all herbs? This will discard all of your changes.", "Confirmation",
+            var dr = MessageBox.Show("Are you sure to reload all herbs? This will discard all of your changes.",
+                "Confirmation",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (dr == DialogResult.Yes) {
+            if (dr == DialogResult.Yes)
+            {
                 ReloadAll();
             }
         }
 
         private void ReloadAll()
         {
-            _newCollection = (HerbCollection)_originalCollection.Clone();
-            if (_newCollection.Herbs.Count <= 0) {
+            _newCollection = (HerbCollection) _originalCollection.Clone();
+            if (_newCollection.Herbs.Count <= 0)
+            {
                 ShowError("No herbs were found.");
                 Close();
                 return;
@@ -186,17 +195,22 @@ namespace HerbReconListMaker
         {
             var index = _newCollection.Herbs.IndexOf(_actualHerb) + 1;
             SaveActualHerb();
-            if (_newCollection.Herbs.Count - 1 >= index) {
+            if (_newCollection.Herbs.Count - 1 >= index)
+            {
                 LoadHerb(_newCollection.Herbs[index]);
             }
-            else {
-                MessageBox.Show("You achieved the end of the herb file. Your herb has been saved. Press save and close to write everything to a file now.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            else
+            {
+                MessageBox.Show(
+                    "You achieved the end of the herb file. Your herb has been saved. Press save and close to write everything to a file now.",
+                    "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
         private void but_deleteHerb_Click(object sender, EventArgs e)
         {
-            if (_newCollection.Herbs.Count <= 1) {
+            if (_newCollection.Herbs.Count <= 1)
+            {
                 ShowError("This is the last herb. You can't remove it");
                 return;
             }
@@ -207,14 +221,15 @@ namespace HerbReconListMaker
 
         private void but_goToMissing_Click(object sender, EventArgs e)
         {
-            LoadHerb((Herb)combo_missingHerbs.SelectedItem);
+            LoadHerb((Herb) combo_missingHerbs.SelectedItem);
         }
 
         private void but_prevImage_Click(object sender, EventArgs e)
         {
             if (_actualHerb.ImageUrls.Count < 2) return;
             _actualImageIndex--;
-            if (_actualImageIndex < 0) {
+            if (_actualImageIndex < 0)
+            {
                 _actualImageIndex = _actualHerb.ImageUrls.Count - 1;
             }
             RefreshImage();
@@ -224,7 +239,8 @@ namespace HerbReconListMaker
         {
             if (_actualHerb.ImageUrls.Count < 2) return;
             _actualImageIndex++;
-            if (_actualImageIndex > _actualHerb.ImageUrls.Count - 1) {
+            if (_actualImageIndex > _actualHerb.ImageUrls.Count - 1)
+            {
                 _actualImageIndex = 0;
             }
             RefreshImage();

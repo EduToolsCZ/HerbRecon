@@ -1,17 +1,11 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HerbReconListMaker;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HerbReconListMaker.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class WikipediaApiUtilTests
     {
-        [TestMethod()]
+        [TestMethod]
         public void SearchTest()
         {
             var result = WikipediaApiUtil.Search("Sedmikraska");
@@ -19,7 +13,7 @@ namespace HerbReconListMaker.Tests
             Assert.AreEqual("Sedmikráska chudobka", result[0].Title);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void GetPageContentInJsonTest()
         {
             var result = WikipediaApiUtil.GetPageContentInJson("Sedmikráska chudobka");
