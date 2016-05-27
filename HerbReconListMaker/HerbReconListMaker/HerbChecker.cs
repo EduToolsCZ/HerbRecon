@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -66,10 +67,17 @@ namespace HerbReconListMaker
             }
         }
 
-        private void RefreshComboBoxItems()
+        private void RefreshComboBoxesItems()
         {
             combo_herb.Items.Clear();
+            combo_missingHerbs.Items.Clear();
+            combo_missingHerbs.SelectedIndex = -1;
             foreach (var herb in _newCollection.Herbs) {
+                if (string.IsNullOrEmpty(herb.Family) || string.IsNullOrEmpty(herb.LatinName) || herb.ImageUrls == null ||
+                    herb.ImageUrls.Count == 0) {
+                    combo_missingHerbs.Items.Add(herb);
+                    combo_missingHerbs.SelectedIndex = 0;
+                }
                 combo_herb.Items.Add(herb);
             }
             if (combo_herb.Items.Count == 0) {
@@ -90,17 +98,25 @@ namespace HerbReconListMaker
 
         private void SaveAndClose()
         {
-            var sfd = new SaveFileDialog
+            var fbd = new FolderBrowserDialog()
             {
-                InitialDirectory = Environment.CurrentDirectory
+                ShowNewFolderButton = true,
+                SelectedPath = Environment.CurrentDirectory,
+                Description = "Select a folder"
             };
-            while (sfd.ShowDialog() != DialogResult.OK) {
-                // do it again /\
+            if (fbd.ShowDialog() != DialogResult.OK || string.IsNullOrWhiteSpace(fbd.SelectedPath)) {
+                return;
             }
+            var directory = fbd.SelectedPath;
             var json = JsonConvert.SerializeObject(_newCollection, Formatting.None);
-            File.WriteAllText(sfd.FileName, json);
+            File.WriteAllText(Path.Combine(directory, "Herbs.json"), json);
             json = JsonConvert.SerializeObject(_newCollection, Formatting.Indented);
-            File.WriteAllText(sfd.FileName, json);
+            File.WriteAllText(Path.Combine(directory, "HerbsFormatted.json"), json);
+            var md5 = Program.GetFileMd5(Path.Combine(directory, "Herbs.json"));
+            File.WriteAllText(Path.Combine(directory, "md5.txt"), md5);
+            if (check_openDirAfterClose.Checked) {
+                Process.Start("explorer.exe", directory);
+            }
             Close();
         }
 
@@ -158,7 +174,7 @@ namespace HerbReconListMaker
                 return;
             }
             LoadHerb(_newCollection.Herbs[0]);
-            RefreshComboBoxItems();
+            RefreshComboBoxesItems();
         }
 
         private void but_discardChanges_Click(object sender, EventArgs e)
@@ -170,26 +186,55 @@ namespace HerbReconListMaker
         {
             var index = _newCollection.Herbs.IndexOf(_actualHerb) + 1;
             SaveActualHerb();
-            if (_newCollection.Herbs.Count - 1 >= index)
-            {
+            if (_newCollection.Herbs.Count - 1 >= index) {
                 LoadHerb(_newCollection.Herbs[index]);
             }
-            else
-            {
+            else {
                 MessageBox.Show("You achieved the end of the herb file. Your herb has been saved. Press save and close to write everything to a file now.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
         private void but_deleteHerb_Click(object sender, EventArgs e)
         {
-            if (_newCollection.Herbs.Count <= 1)
-            {
+            if (_newCollection.Herbs.Count <= 1) {
                 ShowError("This is the last herb. You can't remove it");
                 return;
             }
             _newCollection.Herbs.Remove(_actualHerb);
-            RefreshComboBoxItems();
+            RefreshComboBoxesItems();
             LoadHerb(_newCollection.Herbs[0]);
+        }
+
+        private void but_goToMissing_Click(object sender, EventArgs e)
+        {
+            LoadHerb((Herb)combo_missingHerbs.SelectedItem);
+        }
+
+        private void but_prevImage_Click(object sender, EventArgs e)
+        {
+            if (_actualHerb.ImageUrls.Count < 2) return;
+            _actualImageIndex--;
+            if (_actualImageIndex < 0) {
+                _actualImageIndex = _actualHerb.ImageUrls.Count - 1;
+            }
+            RefreshImage();
+        }
+
+        private void but_nextImage_Click(object sender, EventArgs e)
+        {
+            if (_actualHerb.ImageUrls.Count < 2) return;
+            _actualImageIndex++;
+            if (_actualImageIndex > _actualHerb.ImageUrls.Count - 1) {
+                _actualImageIndex = 0;
+            }
+            RefreshImage();
+        }
+
+        private void but_addImage_Click(object sender, EventArgs e)
+        {
+            _actualHerb.ImageUrls.Add(txt_imageUrl.Text);
+            _actualImageIndex = 0;
+            RefreshImage();
         }
     }
 }

@@ -47,10 +47,13 @@
             this.but_saveAndClose = new System.Windows.Forms.Button();
             this.combo_herb = new System.Windows.Forms.ComboBox();
             this.but_goToHerb = new System.Windows.Forms.Button();
-            this.but_loadOnlyMissing = new System.Windows.Forms.Button();
             this.but_reloadAll = new System.Windows.Forms.Button();
             this.txt_id = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.combo_missingHerbs = new System.Windows.Forms.ComboBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.but_goToMissing = new System.Windows.Forms.Button();
+            this.check_openDirAfterClose = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.picture_herb)).BeginInit();
             this.SuspendLayout();
             // 
@@ -173,25 +176,27 @@
             // 
             // but_nextImage
             // 
-            this.but_nextImage.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F);
+            this.but_nextImage.Font = new System.Drawing.Font("Segoe UI", 25F);
             this.but_nextImage.Location = new System.Drawing.Point(623, 434);
             this.but_nextImage.Name = "but_nextImage";
             this.but_nextImage.Size = new System.Drawing.Size(75, 55);
             this.but_nextImage.TabIndex = 13;
             this.but_nextImage.TabStop = false;
-            this.but_nextImage.Text = ">";
+            this.but_nextImage.Text = "▶";
             this.but_nextImage.UseVisualStyleBackColor = true;
+            this.but_nextImage.Click += new System.EventHandler(this.but_nextImage_Click);
             // 
             // but_prevImage
             // 
-            this.but_prevImage.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F);
+            this.but_prevImage.Font = new System.Drawing.Font("Segoe UI", 25F);
             this.but_prevImage.Location = new System.Drawing.Point(542, 434);
             this.but_prevImage.Name = "but_prevImage";
             this.but_prevImage.Size = new System.Drawing.Size(75, 55);
             this.but_prevImage.TabIndex = 14;
             this.but_prevImage.TabStop = false;
-            this.but_prevImage.Text = "<";
+            this.but_prevImage.Text = "◀";
             this.but_prevImage.UseVisualStyleBackColor = true;
+            this.but_prevImage.Click += new System.EventHandler(this.but_prevImage_Click);
             // 
             // but_removeImage
             // 
@@ -215,6 +220,7 @@
             this.but_addImage.TabStop = false;
             this.but_addImage.Text = "Add Image";
             this.but_addImage.UseVisualStyleBackColor = true;
+            this.but_addImage.Click += new System.EventHandler(this.but_addImage_Click);
             // 
             // txt_imageUrl
             // 
@@ -250,6 +256,7 @@
             // 
             // but_goToHerb
             // 
+            this.but_goToHerb.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.but_goToHerb.Location = new System.Drawing.Point(505, 585);
             this.but_goToHerb.Name = "but_goToHerb";
             this.but_goToHerb.Size = new System.Drawing.Size(75, 23);
@@ -259,19 +266,10 @@
             this.but_goToHerb.UseVisualStyleBackColor = true;
             this.but_goToHerb.Click += new System.EventHandler(this.but_goToHerb_Click);
             // 
-            // but_loadOnlyMissing
-            // 
-            this.but_loadOnlyMissing.Location = new System.Drawing.Point(586, 556);
-            this.but_loadOnlyMissing.Name = "but_loadOnlyMissing";
-            this.but_loadOnlyMissing.Size = new System.Drawing.Size(112, 23);
-            this.but_loadOnlyMissing.TabIndex = 22;
-            this.but_loadOnlyMissing.TabStop = false;
-            this.but_loadOnlyMissing.Text = "Load only missing";
-            this.but_loadOnlyMissing.UseVisualStyleBackColor = true;
-            // 
             // but_reloadAll
             // 
-            this.but_reloadAll.Location = new System.Drawing.Point(468, 556);
+            this.but_reloadAll.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.but_reloadAll.Location = new System.Drawing.Point(586, 556);
             this.but_reloadAll.Name = "but_reloadAll";
             this.but_reloadAll.Size = new System.Drawing.Size(112, 23);
             this.but_reloadAll.TabIndex = 23;
@@ -282,10 +280,11 @@
             // 
             // txt_id
             // 
-            this.txt_id.Location = new System.Drawing.Point(425, 469);
+            this.txt_id.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.txt_id.Location = new System.Drawing.Point(425, 463);
             this.txt_id.Name = "txt_id";
             this.txt_id.ReadOnly = true;
-            this.txt_id.Size = new System.Drawing.Size(111, 20);
+            this.txt_id.Size = new System.Drawing.Size(111, 22);
             this.txt_id.TabIndex = 24;
             this.txt_id.TabStop = false;
             // 
@@ -293,21 +292,67 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label2.Location = new System.Drawing.Point(373, 472);
+            this.label2.Location = new System.Drawing.Point(373, 466);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(46, 13);
             this.label2.TabIndex = 25;
             this.label2.Text = "Herb ID";
+            // 
+            // combo_missingHerbs
+            // 
+            this.combo_missingHerbs.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.combo_missingHerbs.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.combo_missingHerbs.FormattingEnabled = true;
+            this.combo_missingHerbs.Location = new System.Drawing.Point(351, 558);
+            this.combo_missingHerbs.Name = "combo_missingHerbs";
+            this.combo_missingHerbs.Size = new System.Drawing.Size(148, 21);
+            this.combo_missingHerbs.TabIndex = 26;
+            this.combo_missingHerbs.TabStop = false;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.label6.Location = new System.Drawing.Point(353, 536);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(136, 13);
+            this.label6.TabIndex = 27;
+            this.label6.Text = "Herbs missing some info:";
+            // 
+            // but_goToMissing
+            // 
+            this.but_goToMissing.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.but_goToMissing.Location = new System.Drawing.Point(505, 556);
+            this.but_goToMissing.Name = "but_goToMissing";
+            this.but_goToMissing.Size = new System.Drawing.Size(75, 23);
+            this.but_goToMissing.TabIndex = 28;
+            this.but_goToMissing.TabStop = false;
+            this.but_goToMissing.Text = "Go to herb";
+            this.but_goToMissing.UseVisualStyleBackColor = true;
+            this.but_goToMissing.Click += new System.EventHandler(this.but_goToMissing_Click);
+            // 
+            // check_openDirAfterClose
+            // 
+            this.check_openDirAfterClose.AutoSize = true;
+            this.check_openDirAfterClose.Location = new System.Drawing.Point(506, 538);
+            this.check_openDirAfterClose.Name = "check_openDirAfterClose";
+            this.check_openDirAfterClose.Size = new System.Drawing.Size(192, 17);
+            this.check_openDirAfterClose.TabIndex = 29;
+            this.check_openDirAfterClose.Text = "Open the output folder after closing";
+            this.check_openDirAfterClose.UseVisualStyleBackColor = true;
             // 
             // HerbChecker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(710, 620);
+            this.Controls.Add(this.check_openDirAfterClose);
+            this.Controls.Add(this.but_goToMissing);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.combo_missingHerbs);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.txt_id);
             this.Controls.Add(this.but_reloadAll);
-            this.Controls.Add(this.but_loadOnlyMissing);
             this.Controls.Add(this.but_goToHerb);
             this.Controls.Add(this.combo_herb);
             this.Controls.Add(this.but_saveAndClose);
@@ -363,9 +408,12 @@
         private System.Windows.Forms.Button but_saveAndClose;
         private System.Windows.Forms.ComboBox combo_herb;
         private System.Windows.Forms.Button but_goToHerb;
-        private System.Windows.Forms.Button but_loadOnlyMissing;
         private System.Windows.Forms.Button but_reloadAll;
         private System.Windows.Forms.TextBox txt_id;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ComboBox combo_missingHerbs;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Button but_goToMissing;
+        private System.Windows.Forms.CheckBox check_openDirAfterClose;
     }
 }
