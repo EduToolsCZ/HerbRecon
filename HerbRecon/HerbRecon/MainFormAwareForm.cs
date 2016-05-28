@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace HerbRecon
@@ -12,14 +8,14 @@ namespace HerbRecon
         [Obsolete("This is designer only method", true)]
         public MainFormAwareForm()
         {
-            
         }
+
         public MainFormAwareForm(MainForm mf)
         {
-            this.Closed += (o, e) =>
-            {
-                mf.Close();
-            };
+            MainForm = mf;
+            Closed += (o, e) => { MainForm.Close(); };
         }
+
+        protected MainForm MainForm { get; set; }
     }
 }

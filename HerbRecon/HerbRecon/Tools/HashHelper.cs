@@ -1,18 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace HerbRecon.Tools
 {
     public static class HashHelper
     {
         private static readonly MD5CryptoServiceProvider Md5 = new MD5CryptoServiceProvider();
+
         /// <summary>
-        /// Converts byte array to a hexadecimal string in the 0a format
+        ///     Converts byte array to a hexadecimal string in the 0a format
         /// </summary>
         /// <param name="bytes"></param>
         /// <returns></returns>
@@ -22,7 +21,7 @@ namespace HerbRecon.Tools
         }
 
         /// <summary>
-        /// Compares two hashes, retuns true if they are same
+        ///     Compares two hashes, retuns true if they are same
         /// </summary>
         /// <param name="hash1"></param>
         /// <param name="hash2"></param>
@@ -33,14 +32,15 @@ namespace HerbRecon.Tools
         }
 
         /// <summary>
-        /// Compares two files with hash. Returns true if they are same
+        ///     Compares two files with hash. Returns true if they are same
         /// </summary>
         /// <param name="path1"></param>
         /// <param name="path2"></param>
         /// <returns></returns>
         public static bool AreFilesSame(string path1, string path2)
         {
-            if(!(File.Exists(path1) && File.Exists(path2))) throw new FileNotFoundException("Specified path does not exist");
+            if (!(File.Exists(path1) && File.Exists(path2)))
+                throw new FileNotFoundException("Specified path does not exist");
             return AreHashesSame(ComputeMd5FromFileInBytes(path1), ComputeMd5FromFileInBytes(path2));
         }
 
@@ -50,7 +50,7 @@ namespace HerbRecon.Tools
         }
 
         /// <summary>
-        /// Computes hash from a string, returns the 0a form.
+        ///     Computes hash from a string, returns the 0a form.
         /// </summary>
         /// <param name="s"></param>
         /// <param name="utf8"></param>
@@ -62,7 +62,7 @@ namespace HerbRecon.Tools
         }
 
         /// <summary>
-        /// Computes hash of a file with a performance-friendly method
+        ///     Computes hash of a file with a performance-friendly method
         /// </summary>
         /// <param name="path">The path of the file</param>
         /// <returns></returns>
@@ -72,7 +72,7 @@ namespace HerbRecon.Tools
         }
 
         /// <summary>
-        /// Computes hash of a file with a performance-friendly method
+        ///     Computes hash of a file with a performance-friendly method
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
@@ -80,7 +80,8 @@ namespace HerbRecon.Tools
         {
             if (!File.Exists(path)) return null;
             byte[] md5;
-            using (var fs = new FileStream(path, FileMode.Open)) {
+            using (var fs = new FileStream(path, FileMode.Open))
+            {
                 md5 = Md5.ComputeHash(fs);
             }
             return md5;
