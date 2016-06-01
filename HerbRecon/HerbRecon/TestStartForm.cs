@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Forms;
+using HerbLib;
 using HerbRecon.Tools;
 
 namespace HerbRecon
@@ -9,18 +11,17 @@ namespace HerbRecon
         public TestStartForm(MenuForm mf)
         {
             InitializeComponent();
-            Menu = mf;
-            Closed += (o, e) => { Menu.Show(); };
+            MenuForm = mf;
+            Closed += (o, e) => { MenuForm.Show(); };
         }
 
-        private MenuForm Menu { get; }
+        private MenuForm MenuForm { get; }
 
         private void TestStartForm_Load(object sender, EventArgs e)
         {
             list_tested.Items.Clear();
             list_notTested.Items.Clear();
-            foreach (var herb in HerbListManager.HerbDatabase.Herbs)
-            {
+            foreach (var herb in HerbListManager.HerbDatabase.Herbs) {
                 list_tested.Items.Add(herb);
             }
         }
@@ -45,8 +46,7 @@ namespace HerbRecon
 
         private void but_moveAll_Click(object sender, EventArgs e)
         {
-            foreach (var item in list_notTested.Items)
-            {
+            foreach (var item in list_notTested.Items) {
                 list_tested.Items.Add(item);
             }
             list_notTested.Items.Clear();
@@ -54,8 +54,7 @@ namespace HerbRecon
 
         private void but_removeAll_Click(object sender, EventArgs e)
         {
-            foreach (var item in list_tested.Items)
-            {
+            foreach (var item in list_tested.Items) {
                 list_notTested.Items.Add(item);
             }
             list_tested.Items.Clear();
@@ -68,7 +67,16 @@ namespace HerbRecon
 
         private void but_ok_Click(object sender, EventArgs e)
         {
-            // TODO: start testing
+            var coll = new HerbCollection
+            {
+                Herbs = list_tested.Items.Cast<Herb>().Where(h => h.ImageUrls != null && !string.IsNullOrWhiteSpace(h.Family)).ToList()
+            };
+            var session =
+                new TestingSession(
+                    coll.Herbs.Select(h => new TestingObject { Object = h, TimesFailed = 0, TimesGuessed = 0 }).ToList(),
+                    true, false);
+            new TestForm(MenuForm, session).Show();
+            this.Hide();
         }
     }
 }

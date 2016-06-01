@@ -16,6 +16,7 @@ namespace HerbRecon
         private async void MainForm_Shown(object sender, EventArgs e)
         {
             SetStatus("Kontroluji aktuálnost aplikace");
+            // controls the application update source
             using (var mgr = new UpdateManager(@"http://sorashi.xf.cz/projects/herbrecon/releases"))
             {
                 await mgr.UpdateApp();
@@ -23,6 +24,8 @@ namespace HerbRecon
             SetStatus("Aktualizuji informace o rostlinách");
             await HerbListManager.UpdateAsync();
             await Task.Delay(1200);
+            SetStatus("Načítám písma");
+            FontContainer.Load();
             SetStatus("Dokončuji");
             await Task.Delay(2000);
             Hide();
