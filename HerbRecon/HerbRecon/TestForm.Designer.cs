@@ -113,6 +113,7 @@
             this.MaximizeBox = false;
             this.Name = "TestForm";
             this.ShowIcon = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Test";
             ((System.ComponentModel.ISupportInitialize)(this.pic_herb)).EndInit();
             this.ResumeLayout(false);

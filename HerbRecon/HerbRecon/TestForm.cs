@@ -18,6 +18,7 @@ namespace HerbRecon
         private MenuForm _mf;
         private TestingSession TestingSession { get; set; }
         private Herb ActualHerb { get; set; }
+        private bool CheckingAnswer { get; set; } = false;
         public TestForm(MenuForm mf, TestingSession testingSession)
         {
             InitializeComponent();
@@ -50,13 +51,14 @@ namespace HerbRecon
 
         private async void txt_answer_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter) {
+            if (e.KeyCode == Keys.Enter && !CheckingAnswer) {
                 await CheckAnswer();
             }
         }
 
         private async Task CheckAnswer()
         {
+            CheckingAnswer = true;
             var name = txt_answer.Text.ToLower().Trim().RemoveDiacritics();
             var family = combo_family.Text.ToLower().Trim().RemoveDiacritics();
             var target = TestingSession.TestSpecies ? ActualHerb.ToString().RemoveDiacritics() : ActualHerb.Genus.RemoveDiacritics();
@@ -88,6 +90,7 @@ namespace HerbRecon
                 MessageBox.Show("Testování skončilo.");
                 this.Close();
             }
+            CheckingAnswer = false;
         }
 
         /// <summary>
