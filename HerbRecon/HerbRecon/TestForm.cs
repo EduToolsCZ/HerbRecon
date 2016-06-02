@@ -46,7 +46,6 @@ namespace HerbRecon
         {
             ActualHerb = h;
             // choose a random image from the list
-            // todo: make a cache for the images, so it is not needed to download it every time
             var url = h.ImageUrls[_random.Next(h.ImageUrls.Count)];
             pic_herb.Image = ImageCache.GetImage(url).Result;
             txt_answer.Text = "";
