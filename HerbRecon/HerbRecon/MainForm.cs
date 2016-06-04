@@ -26,8 +26,6 @@ namespace HerbRecon
             await Task.Delay(1200);
             SetStatus("Aktualizuji obrázky");
             await ImageCache.RefreshCache();
-            SetStatus("Načítám písma");
-            FontContainer.Load();
             SetStatus("Dokončuji");
             await Task.Delay(2000);
             Hide();

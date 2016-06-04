@@ -97,7 +97,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions.cs" />
-    <Compile Include="FontContainer.cs" />
     <Compile Include="ImageCache.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -170,8 +169,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="logo.ico" />
-    <None Include="Resources\HelveticaNeue-Light.otf" />
-    <None Include="Resources\HelveticaNeue-Medium.otf" />
     <None Include="Resources\rolling.gif" />
     <None Include="Resources\logo.png" />
   </ItemGroup>

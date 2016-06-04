@@ -27,9 +27,6 @@ namespace HerbRecon
         {
             InitializeComponent();
             _myDefaultBackColor = this.BackColor;
-            txt_answer.Font = new Font(FontContainer.Helvetica, 28, FontStyle.Bold);
-            combo_family.Font = new Font(FontContainer.Helvetica, 12, FontStyle.Regular);
-            lab_latinName.Font = new Font(FontContainer.Helvetica, 12, FontStyle.Italic);
             TestingSession = testingSession;
             if (!TestingSession.TestFamilies) combo_family.Enabled = false;
             LoadHerb(TestingSession.Start());
