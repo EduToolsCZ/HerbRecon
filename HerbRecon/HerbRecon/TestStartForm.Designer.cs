@@ -204,6 +204,7 @@
             // chck_testFamilies
             // 
             this.chck_testFamilies.AutoSize = true;
+            this.chck_testFamilies.Enabled = false;
             this.chck_testFamilies.Location = new System.Drawing.Point(12, 311);
             this.chck_testFamilies.Name = "chck_testFamilies";
             this.chck_testFamilies.Size = new System.Drawing.Size(206, 17);

@@ -11,6 +11,7 @@ namespace HerbRecon
         public TestStartForm(MenuForm mf)
         {
             InitializeComponent();
+            combo_tries.SelectedIndex = 0;
             MenuForm = mf;
             Closed += (o, e) => { MenuForm.Show(); };
         }
@@ -67,14 +68,23 @@ namespace HerbRecon
 
         private void but_ok_Click(object sender, EventArgs e)
         {
+            const int minItems = 5;
+            if (list_tested.Items.Count < minItems)
+            {
+                Extensions.ShowErrorMessageBox($"Musíte vybrat nejméně {minItems} rostlin.");
+            }
             var coll = new HerbCollection
             {
                 Herbs = list_tested.Items.Cast<Herb>().Where(h => h.ImageUrls != null && !string.IsNullOrWhiteSpace(h.Family)).ToList()
             };
             var session =
                 new TestingSession(
-                    coll.Herbs.Select(h => new TestingObject {Object = h, TimesFailed = 0, TimesGuessed = 0}).ToList(),
-                    chck_testSpecies.Checked, chck_testFamilies.Checked);
+                    coll.Herbs.Select(h => new TestingObject {Object = h}).ToList(),
+                    chck_testSpecies.Checked, chck_testFamilies.Checked)
+                {
+                    SuccessesInRowRequired = (int)num_tries.Value,
+                    SuccessesHaveToBeInRow = combo_tries.SelectedIndex == 0
+                };
             new TestForm(MenuForm, session).Show();
             this.Hide();
         }

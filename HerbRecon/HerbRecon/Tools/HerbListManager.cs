@@ -31,6 +31,10 @@ namespace HerbRecon.Tools
             }
         }
 
+        /// <summary>
+        ///     Checks if there is an update available for the herb list
+        /// </summary>
+        /// <returns></returns>
         public static async Task<bool> UpdateAvailableAsync()
         {
             if (!File.Exists(HerbFilePath)) return true;
@@ -41,7 +45,7 @@ namespace HerbRecon.Tools
         }
 
         /// <summary>
-        ///     Checks for update and updates if needed
+        ///     Checks for update and updates if so
         /// </summary>
         /// <returns></returns>
         public static async Task UpdateAsync()
