@@ -18,9 +18,15 @@ namespace HerbRecon
         private MenuForm _mf;
         private TestingSession TestingSession { get; set; }
         private Herb ActualHerb { get; set; }
+        private readonly Color _myDefaultBackColor;
+        /// <summary>
+        ///     Defines if the form is in the state of showing the result and disclosure to the user
+        /// </summary>
+        private bool CheckingAnswer { get; set; } = false;
         public TestForm(MenuForm mf, TestingSession testingSession)
         {
             InitializeComponent();
+            _myDefaultBackColor = this.BackColor;
             txt_answer.Font = new Font(FontContainer.Helvetica, 28, FontStyle.Bold);
             combo_family.Font = new Font(FontContainer.Helvetica, 12, FontStyle.Regular);
             lab_latinName.Font = new Font(FontContainer.Helvetica, 12, FontStyle.Italic);
@@ -40,28 +46,44 @@ namespace HerbRecon
         {
             ActualHerb = h;
             // choose a random image from the list
-            // todo: make a cache for the images, so it is not needed to download it every time
-            pic_herb.ImageLocation = h.ImageUrls[_random.Next(h.ImageUrls.Count)];
+            var url = h.ImageUrls[_random.Next(h.ImageUrls.Count)];
+            pic_herb.Image = ImageCache.GetImage(url).Result;
             txt_answer.Text = "";
             combo_family.Text = "";
             lab_wholeName.Text = "";
             lab_latinName.Text = "";
         }
 
-        private async void txt_answer_KeyDown(object sender, KeyEventArgs e)
+        private void txt_answer_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter) {
-                await CheckAnswer();
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+            }
+            if (e.KeyCode == Keys.Enter && !CheckingAnswer) {
+                CheckAnswer();
+            }
+            else if (CheckingAnswer) {
+                this.BackColor = _myDefaultBackColor;
+                var next = TestingSession.Next();
+                if (next != null) {
+                    LoadHerb(next);
+                }
+                else {
+                    MessageBox.Show("Testování skončilo.");
+                    this.Close();
+                }
+                CheckingAnswer = false;
             }
         }
 
-        private async Task CheckAnswer()
+        private void CheckAnswer()
         {
+            CheckingAnswer = true;
             var name = txt_answer.Text.ToLower().Trim().RemoveDiacritics();
             var family = combo_family.Text.ToLower().Trim().RemoveDiacritics();
             var target = TestingSession.TestSpecies ? ActualHerb.ToString().RemoveDiacritics() : ActualHerb.Genus.RemoveDiacritics();
             var targetFamily = ActualHerb.Family.RemoveDiacritics();
-            var prevColor = this.BackColor;
             if (LevenshteinDistance(name, target) <= 2) {
                 if (TestingSession.TestFamilies && LevenshteinDistance(family, targetFamily) > 2) {
                     TestingSession.Failed();
@@ -78,16 +100,6 @@ namespace HerbRecon
             }
             lab_wholeName.Text = ActualHerb.ToString();
             lab_latinName.Text = ActualHerb.LatinName;
-            await Task.Delay(2500);
-            this.BackColor = prevColor;
-            var next = TestingSession.Next();
-            if (next != null) {
-                LoadHerb(next);
-            }
-            else {
-                MessageBox.Show("Testování skončilo.");
-                this.Close();
-            }
         }
 
         /// <summary>
