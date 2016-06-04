@@ -47,6 +47,7 @@
             // 
             // but_options
             // 
+            this.but_options.Enabled = false;
             this.but_options.Font = new System.Drawing.Font("Century Gothic", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.but_options.Location = new System.Drawing.Point(12, 69);
             this.but_options.Name = "but_options";
@@ -64,6 +65,7 @@
             this.but_about.TabIndex = 2;
             this.but_about.Text = "O aplikaci";
             this.but_about.UseVisualStyleBackColor = true;
+            this.but_about.Click += new System.EventHandler(this.but_about_Click);
             // 
             // but_exit
             // 

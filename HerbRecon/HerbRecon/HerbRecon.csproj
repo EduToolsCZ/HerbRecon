@@ -96,6 +96,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AboutDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AboutDialog.Designer.cs">
+      <DependentUpon>AboutDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Extensions.cs" />
     <Compile Include="ImageCache.cs" />
     <Compile Include="MainForm.cs">
@@ -131,6 +137,9 @@
     </Compile>
     <Compile Include="Tools\HashHelper.cs" />
     <Compile Include="Tools\HerbListManager.cs" />
+    <EmbeddedResource Include="AboutDialog.resx">
+      <DependentUpon>AboutDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -169,6 +178,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="logo.ico" />
+    <None Include="Resources\cc0.gif" />
+    <None Include="Resources\LICENSE" />
     <None Include="Resources\rolling.gif" />
     <None Include="Resources\logo.png" />
   </ItemGroup>

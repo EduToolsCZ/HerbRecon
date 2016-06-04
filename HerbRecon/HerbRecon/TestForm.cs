@@ -36,9 +36,8 @@ namespace HerbRecon
         private readonly Random _random = new Random();
 
         /// <summary>
-        ///     Loads the herb <paramref name="h"/> to the UI and saves it as the <see cref="ActualHerb"/>
+        ///     Loads the current herb from the <see cref="TestingSession"/> to the UI
         /// </summary>
-        /// <param name="h"></param>
         private void LoadCurrentHerb()
         {
             var h = TestingSession.CurrentTestingObject.Object;

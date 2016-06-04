@@ -23,11 +23,8 @@ namespace HerbRecon
             }
             SetStatus("Aktualizuji informace o rostlinách");
             await HerbListManager.UpdateAsync();
-            await Task.Delay(1200);
             SetStatus("Aktualizuji obrázky");
             await ImageCache.RefreshCache();
-            SetStatus("Dokončuji");
-            await Task.Delay(2000);
             Hide();
             new MenuForm(this).Show();
         }
