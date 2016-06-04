@@ -11,6 +11,9 @@ namespace HerbRecon
     {
         public delegate void TestingEndedDelegate(TestingSession sender);
 
+        /// <summary>
+        ///     RNG used to pull herbs from the list
+        /// </summary>
         private readonly Random _random = new Random();
 
         public TestingSession(List<TestingObject> testingObjects, bool testSpecies = true, bool testFamilies = true)
@@ -33,7 +36,24 @@ namespace HerbRecon
         /// </summary>
         public bool TestFamilies { get; }
 
+        /// <summary>
+        ///     Indicates how many successful tries are required to remove the actual Herb from the tested list
+        /// </summary>
+        public int SuccessInRowRequired { get; set; }
+
+        /// <summary>
+        ///     Indicates whether <see cref="SuccessInRowRequired"/> have to be in a row or in total
+        /// </summary>
+        public bool SccuessesHaveToBeInRow { get; set; }
+
+        /// <summary>
+        ///     Indicates whether the testing has already started
+        /// </summary>
         private bool HasTestingStarted { get; set; }
+
+        /// <summary>
+        ///     Indicates whether the testing has already ended
+        /// </summary>
         private bool HasTestingEnded { get; set; }
 
         /// <summary>
@@ -64,6 +84,10 @@ namespace HerbRecon
         /// </summary>
         public event TestingEndedDelegate TestingEnded;
 
+        /// <summary>
+        ///     Occurs when the testng ends
+        /// </summary>
+        /// <param name="sender"></param>
         private void TestingSession_TestingEnded(TestingSession sender)
         {
             HasTestingEnded = true;

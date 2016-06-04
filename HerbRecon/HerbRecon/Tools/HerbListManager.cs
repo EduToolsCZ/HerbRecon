@@ -15,7 +15,7 @@ namespace HerbRecon.Tools
         private const string HerbsMd5Url = @"http://sorashi.xf.cz/projects/herbrecon/herbs/md5.txt";
 
 
-        private const string HerbDataFolder = @"data";
+        private const string HerbDataFolder = @"..\data";
 
         public static HerbCollection HerbDatabase;
         private static readonly string HerbFilePath = Path.Combine(HerbDataFolder, "herbs.json");

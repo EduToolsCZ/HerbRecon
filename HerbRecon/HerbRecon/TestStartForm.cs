@@ -73,8 +73,8 @@ namespace HerbRecon
             };
             var session =
                 new TestingSession(
-                    coll.Herbs.Select(h => new TestingObject { Object = h, TimesFailed = 0, TimesGuessed = 0 }).ToList(),
-                    true, false);
+                    coll.Herbs.Select(h => new TestingObject {Object = h, TimesFailed = 0, TimesGuessed = 0}).ToList(),
+                    chck_testSpecies.Checked, chck_testFamilies.Checked);
             new TestForm(MenuForm, session).Show();
             this.Hide();
         }

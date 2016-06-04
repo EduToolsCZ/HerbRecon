@@ -15,7 +15,7 @@ namespace HerbRecon
         /// <summary>
         ///     The path to the directory where all the images are stored
         /// </summary>
-        private const string CachePath = @"data\images";
+        private const string CachePath = @"..\data\images";
 
         /// <summary>
         ///     Downloads all needed images from the <see cref="HerbListManager.HerbDatabase"/> to the cache. Use <see cref="GetImage"/> to retrieve an image
