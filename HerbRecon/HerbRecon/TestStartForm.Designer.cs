@@ -98,7 +98,7 @@
             this.but_removeAll.Size = new System.Drawing.Size(32, 23);
             this.but_removeAll.TabIndex = 7;
             this.but_removeAll.TabStop = false;
-            this.but_removeAll.Text = "<<";
+            this.but_removeAll.Text = ">>";
             this.but_removeAll.UseVisualStyleBackColor = true;
             this.but_removeAll.Click += new System.EventHandler(this.but_removeAll_Click);
             // 
@@ -111,7 +111,7 @@
             this.but_remove.Size = new System.Drawing.Size(32, 23);
             this.but_remove.TabIndex = 6;
             this.but_remove.TabStop = false;
-            this.but_remove.Text = "<";
+            this.but_remove.Text = ">";
             this.but_remove.UseVisualStyleBackColor = true;
             this.but_remove.Click += new System.EventHandler(this.but_remove_Click);
             // 
@@ -124,7 +124,7 @@
             this.but_moveAll.Size = new System.Drawing.Size(32, 23);
             this.but_moveAll.TabIndex = 5;
             this.but_moveAll.TabStop = false;
-            this.but_moveAll.Text = ">>";
+            this.but_moveAll.Text = "<<";
             this.but_moveAll.UseVisualStyleBackColor = true;
             this.but_moveAll.Click += new System.EventHandler(this.but_moveAll_Click);
             // 
@@ -137,7 +137,7 @@
             this.but_add.Size = new System.Drawing.Size(32, 23);
             this.but_add.TabIndex = 4;
             this.but_add.TabStop = false;
-            this.but_add.Text = ">";
+            this.but_add.Text = "<";
             this.but_add.UseVisualStyleBackColor = true;
             this.but_add.Click += new System.EventHandler(this.but_add_Click);
             // 
@@ -173,6 +173,7 @@
             this.list_tested.Location = new System.Drawing.Point(6, 31);
             this.list_tested.Name = "list_tested";
             this.list_tested.Size = new System.Drawing.Size(158, 225);
+            this.list_tested.Sorted = true;
             this.list_tested.TabIndex = 1;
             this.list_tested.TabStop = false;
             // 
@@ -186,19 +187,18 @@
             this.list_notTested.Location = new System.Drawing.Point(225, 31);
             this.list_notTested.Name = "list_notTested";
             this.list_notTested.Size = new System.Drawing.Size(158, 225);
+            this.list_notTested.Sorted = true;
             this.list_notTested.TabIndex = 0;
             this.list_notTested.TabStop = false;
             // 
             // chck_testSpecies
             // 
             this.chck_testSpecies.AutoSize = true;
-            this.chck_testSpecies.Checked = true;
-            this.chck_testSpecies.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chck_testSpecies.Location = new System.Drawing.Point(13, 288);
             this.chck_testSpecies.Name = "chck_testSpecies";
-            this.chck_testSpecies.Size = new System.Drawing.Size(232, 17);
+            this.chck_testSpecies.Size = new System.Drawing.Size(252, 17);
             this.chck_testSpecies.TabIndex = 1;
-            this.chck_testSpecies.Text = "Testovat druhy (např. obecný, chudobka...)";
+            this.chck_testSpecies.Text = "Druhy jsou povinné (např. obecný, chudobka...)";
             this.chck_testSpecies.UseVisualStyleBackColor = true;
             // 
             // chck_testFamilies

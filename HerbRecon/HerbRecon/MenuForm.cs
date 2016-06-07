@@ -24,5 +24,10 @@ namespace HerbRecon
         {
             new AboutDialog().ShowDialog();
         }
+
+        private void but_options_Click(object sender, EventArgs e)
+        {
+            new SettingsFrom().ShowDialog();
+        }
     }
 }

@@ -54,7 +54,7 @@ namespace HerbRecon
         /// <summary>
         ///     Indicates whether the user wants to learn families of the herb
         /// </summary>
-        public bool TestFamilies { get; } 
+        public bool TestFamilies { get; }
 
         /// <summary>
         ///     Indicates how many successful tries are required to remove the actual Herb from the tested list
@@ -68,6 +68,8 @@ namespace HerbRecon
 
         private TestingObject LastTestingObject { get; set; } = null;
 
+        public int TotalSuccesses { get; private set; }
+        public int TotalFails { get; private set; }
         /// <summary>
         ///     The current testing object in the testing session
         /// </summary>
@@ -76,6 +78,10 @@ namespace HerbRecon
         public bool GuessCurrent(string tip, string familyTip = "")
         {
             var guessed = CurrentTestingObject.Guess(this, tip, familyTip);
+
+            if (guessed) TotalSuccesses++;
+            else TotalFails++;
+
             if (!guessed) return false;
             if ((SuccessesHaveToBeInRow && CurrentTestingObject.SuccessfulGuessesInRow >= SuccessesInRowRequired) ||
                 (!SuccessesHaveToBeInRow && CurrentTestingObject.TimesGuessed >= SuccessesInRowRequired)) {

@@ -72,6 +72,7 @@ namespace HerbRecon
             if (list_tested.Items.Count < minItems)
             {
                 Extensions.ShowErrorMessageBox($"Musíte vybrat nejméně {minItems} rostlin.");
+                return;
             }
             var coll = new HerbCollection
             {

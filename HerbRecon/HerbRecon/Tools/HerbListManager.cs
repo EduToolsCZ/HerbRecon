@@ -57,7 +57,25 @@ namespace HerbRecon.Tools
             var json = await GetRequestAsync(HerbsJsonUrl);
             if (!Directory.Exists(HerbDataFolder)) Directory.CreateDirectory(HerbDataFolder);
             File.WriteAllText(HerbFilePath, json);
+            LoadFromTheFile();
+        }
+
+        /// <summary>
+        ///     Loads the <see cref="HerbDatabase"/> from the json file; does not check if it already exits and therefore throws exceptions
+        /// </summary>
+        public static void LoadFromTheFile()
+        {
+            var json = File.ReadAllText(HerbFilePath);
             HerbDatabase = JsonConvert.DeserializeObject<HerbCollection>(json);
+        }
+
+        /// <summary>
+        ///     Checks if the herbs.json file exists and returns true if it does
+        /// </summary>
+        /// <returns></returns>
+        public static bool FileExists()
+        {
+            return File.Exists(HerbFilePath);
         }
     }
 }

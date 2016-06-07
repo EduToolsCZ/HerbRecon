@@ -47,7 +47,6 @@
             // 
             // but_options
             // 
-            this.but_options.Enabled = false;
             this.but_options.Font = new System.Drawing.Font("Century Gothic", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.but_options.Location = new System.Drawing.Point(12, 69);
             this.but_options.Name = "but_options";
@@ -55,6 +54,7 @@
             this.but_options.TabIndex = 1;
             this.but_options.Text = "Nastavení";
             this.but_options.UseVisualStyleBackColor = true;
+            this.but_options.Click += new System.EventHandler(this.but_options_Click);
             // 
             // but_about
             // 

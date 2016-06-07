@@ -56,8 +56,7 @@ namespace HerbRecon
                 e.Handled = true;
                 e.SuppressKeyPress = true;
             }
-            if (e.KeyCode == Keys.Enter && !CheckingAnswer)
-            {
+            if (e.KeyCode == Keys.Enter && !CheckingAnswer) {
                 var guessed = TestingSession.GuessCurrent(txt_answer.Text, combo_family.Text);
                 lab_wholeName.Text = TestingSession.CurrentTestingObject.Object.ToString();
                 lab_latinName.Text = TestingSession.CurrentTestingObject.Object.LatinName;
@@ -71,7 +70,12 @@ namespace HerbRecon
                     LoadCurrentHerb();
                 }
                 else {
-                    MessageBox.Show("Testování skončilo.");
+                    var message = "Testování skončilo.\n" +
+                                  $"Celkový čas: {TestingSession.TestingTime:hh\\:mm\\:ss}\n" +
+                                  $"Počet správných odpovědí: {TestingSession.TotalSuccesses}\n" +
+                                  $"Počet špatných odpovědí: {TestingSession.TotalFails}\n" +
+                                  $"Přesnost: {Math.Round((float)TestingSession.TotalSuccesses / (TestingSession.TotalSuccesses + TestingSession.TotalFails) * 100f, 2)} %";
+                    MessageBox.Show(message);
                     this.Close();
                 }
                 CheckingAnswer = false;

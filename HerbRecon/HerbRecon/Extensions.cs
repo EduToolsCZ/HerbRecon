@@ -67,9 +67,40 @@ namespace HerbRecon
             return d[n, m];
         }
 
+        /// <summary>
+        ///     Removes all instances of a char <paramref name="c"/> in the string
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="c"></param>
+        /// <returns></returns>
+        public static string RemoveChar(this string s, char c)
+        {
+            return s.Replace(c.ToString(), "");
+        }
+
         public static void ShowErrorMessageBox(string message)
         {
             MessageBox.Show(message, "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        /// <summary>
+        ///     Formats the information about the exception into a string. Contains information about the <see cref="Exception.HResult"/>, the type of the exception and the exception message.
+        /// </summary>
+        /// <param name="ex"></param>
+        /// <returns></returns>
+        public static string GetDetailedMessage(this Exception ex)
+        {
+            return $"Error code {ex.HResult}\nException {ex.GetType().Name}\n{ex.Message}";
+        }
+
+        /// <summary>
+        ///     Returns only the first three version indicators, specification - http://semver.org/
+        /// </summary>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        public static string GetSemanticVersion(this Version v)
+        {
+            return $"{v.Major}.{v.Minor}.{v.MajorRevision}";
         }
     }
 }
