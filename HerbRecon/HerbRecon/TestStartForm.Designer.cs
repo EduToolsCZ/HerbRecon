@@ -152,7 +152,7 @@
             this.label2.TabIndex = 3;
             this.label2.Text = "Zkoušené";
             // 
-            // label1
+            // but_remove
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
