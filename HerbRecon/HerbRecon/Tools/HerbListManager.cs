@@ -15,7 +15,7 @@ namespace HerbRecon.Tools
         private const string HerbsMd5Url = @"http://sorashi.xf.cz/projects/herbrecon/herbs/md5.txt";
 
 
-        private const string HerbDataFolder = @"data";
+        private const string HerbDataFolder = @"..\data";
 
         public static HerbCollection HerbDatabase;
         private static readonly string HerbFilePath = Path.Combine(HerbDataFolder, "herbs.json");
@@ -31,6 +31,10 @@ namespace HerbRecon.Tools
             }
         }
 
+        /// <summary>
+        ///     Checks if there is an update available for the herb list
+        /// </summary>
+        /// <returns></returns>
         public static async Task<bool> UpdateAvailableAsync()
         {
             if (!File.Exists(HerbFilePath)) return true;
@@ -41,7 +45,7 @@ namespace HerbRecon.Tools
         }
 
         /// <summary>
-        ///     Checks for update and updates if needed
+        ///     Checks for update and updates if so
         /// </summary>
         /// <returns></returns>
         public static async Task UpdateAsync()
@@ -53,7 +57,25 @@ namespace HerbRecon.Tools
             var json = await GetRequestAsync(HerbsJsonUrl);
             if (!Directory.Exists(HerbDataFolder)) Directory.CreateDirectory(HerbDataFolder);
             File.WriteAllText(HerbFilePath, json);
+            LoadFromTheFile();
+        }
+
+        /// <summary>
+        ///     Loads the <see cref="HerbDatabase"/> from the json file; does not check if it already exits and therefore throws exceptions
+        /// </summary>
+        public static void LoadFromTheFile()
+        {
+            var json = File.ReadAllText(HerbFilePath);
             HerbDatabase = JsonConvert.DeserializeObject<HerbCollection>(json);
+        }
+
+        /// <summary>
+        ///     Checks if the herbs.json file exists and returns true if it does
+        /// </summary>
+        /// <returns></returns>
+        public static bool FileExists()
+        {
+            return File.Exists(HerbFilePath);
         }
     }
 }

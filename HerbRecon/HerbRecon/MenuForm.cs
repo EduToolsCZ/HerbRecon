@@ -19,5 +19,15 @@ namespace HerbRecon
             Hide();
             new TestStartForm(this).Show();
         }
+
+        private void but_about_Click(object sender, EventArgs e)
+        {
+            new AboutDialog().ShowDialog();
+        }
+
+        private void but_options_Click(object sender, EventArgs e)
+        {
+            new SettingsFrom().ShowDialog();
+        }
     }
 }

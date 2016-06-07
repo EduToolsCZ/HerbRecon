@@ -54,6 +54,7 @@
             this.but_options.TabIndex = 1;
             this.but_options.Text = "Nastavení";
             this.but_options.UseVisualStyleBackColor = true;
+            this.but_options.Click += new System.EventHandler(this.but_options_Click);
             // 
             // but_about
             // 
@@ -64,6 +65,7 @@
             this.but_about.TabIndex = 2;
             this.but_about.Text = "O aplikaci";
             this.but_about.UseVisualStyleBackColor = true;
+            this.but_about.Click += new System.EventHandler(this.but_about_Click);
             // 
             // but_exit
             // 

@@ -61,21 +61,30 @@ namespace HerbRecon.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static byte[] HelveticaNeue_Light {
+        internal static System.Drawing.Bitmap get_out {
             get {
-                object obj = ResourceManager.GetObject("HelveticaNeue_Light", resourceCulture);
-                return ((byte[])(obj));
+                object obj = ResourceManager.GetObject("get_out", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream Get_out_frog {
+            get {
+                return ResourceManager.GetStream("Get_out_frog", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] HelveticaNeue_Medium {
+        internal static byte[] LICENSE {
             get {
-                object obj = ResourceManager.GetObject("HelveticaNeue_Medium", resourceCulture);
+                object obj = ResourceManager.GetObject("LICENSE", resourceCulture);
                 return ((byte[])(obj));
             }
         }

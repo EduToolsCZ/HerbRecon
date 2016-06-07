@@ -16,8 +16,7 @@ namespace HerbRecon
     public partial class TestForm : Form
     {
         private MenuForm _mf;
-        private TestingSession TestingSession { get; set; }
-        private Herb ActualHerb { get; set; }
+        private TestingSession TestingSession { get; }
         private readonly Color _myDefaultBackColor;
         /// <summary>
         ///     Defines if the form is in the state of showing the result and disclosure to the user
@@ -27,24 +26,21 @@ namespace HerbRecon
         {
             InitializeComponent();
             _myDefaultBackColor = this.BackColor;
-            txt_answer.Font = new Font(FontContainer.Helvetica, 28, FontStyle.Bold);
-            combo_family.Font = new Font(FontContainer.Helvetica, 12, FontStyle.Regular);
-            lab_latinName.Font = new Font(FontContainer.Helvetica, 12, FontStyle.Italic);
             TestingSession = testingSession;
             if (!TestingSession.TestFamilies) combo_family.Enabled = false;
-            LoadHerb(TestingSession.Start());
+            TestingSession.Next();
+            LoadCurrentHerb();
             _mf = mf;
             this.Closing += (o, e) => { _mf.Show(); };
         }
         private readonly Random _random = new Random();
 
         /// <summary>
-        ///     Loads the herb <paramref name="h"/> to the UI and saves it as the <see cref="ActualHerb"/>
+        ///     Loads the current herb from the <see cref="TestingSession"/> to the UI
         /// </summary>
-        /// <param name="h"></param>
-        private void LoadHerb(Herb h)
+        private void LoadCurrentHerb()
         {
-            ActualHerb = h;
+            var h = TestingSession.CurrentTestingObject.Object;
             // choose a random image from the list
             var url = h.ImageUrls[_random.Next(h.ImageUrls.Count)];
             pic_herb.Image = ImageCache.GetImage(url).Result;
@@ -61,87 +57,29 @@ namespace HerbRecon
                 e.SuppressKeyPress = true;
             }
             if (e.KeyCode == Keys.Enter && !CheckingAnswer) {
-                CheckAnswer();
+                var guessed = TestingSession.GuessCurrent(txt_answer.Text, combo_family.Text);
+                lab_wholeName.Text = TestingSession.CurrentTestingObject.Object.ToString();
+                lab_latinName.Text = TestingSession.CurrentTestingObject.Object.LatinName;
+                this.BackColor = guessed ? Color.Green : Color.Red;
+                CheckingAnswer = true;
             }
             else if (CheckingAnswer) {
                 this.BackColor = _myDefaultBackColor;
                 var next = TestingSession.Next();
                 if (next != null) {
-                    LoadHerb(next);
+                    LoadCurrentHerb();
                 }
                 else {
-                    MessageBox.Show("Testování skončilo.");
+                    var message = "Testování skončilo.\n" +
+                                  $"Celkový čas: {TestingSession.TestingTime:hh\\:mm\\:ss}\n" +
+                                  $"Počet správných odpovědí: {TestingSession.TotalSuccesses}\n" +
+                                  $"Počet špatných odpovědí: {TestingSession.TotalFails}\n" +
+                                  $"Přesnost: {Math.Round((float)TestingSession.TotalSuccesses / (TestingSession.TotalSuccesses + TestingSession.TotalFails) * 100f, 2)} %";
+                    MessageBox.Show(message);
                     this.Close();
                 }
                 CheckingAnswer = false;
             }
-        }
-
-        private void CheckAnswer()
-        {
-            CheckingAnswer = true;
-            var name = txt_answer.Text.ToLower().Trim().RemoveDiacritics();
-            var family = combo_family.Text.ToLower().Trim().RemoveDiacritics();
-            var target = TestingSession.TestSpecies ? ActualHerb.ToString().RemoveDiacritics() : ActualHerb.Genus.RemoveDiacritics();
-            var targetFamily = ActualHerb.Family.RemoveDiacritics();
-            if (LevenshteinDistance(name, target) <= 2) {
-                if (TestingSession.TestFamilies && LevenshteinDistance(family, targetFamily) > 2) {
-                    TestingSession.Failed();
-                    this.BackColor = Color.Red;
-                }
-                else {
-                    TestingSession.Guessed();
-                    this.BackColor = Color.Green;
-                }
-            }
-            else {
-                TestingSession.Failed();
-                this.BackColor = Color.Red;
-            }
-            lab_wholeName.Text = ActualHerb.ToString();
-            lab_latinName.Text = ActualHerb.LatinName;
-        }
-
-        /// <summary>
-        ///     Computes the distance between two strings.
-        /// </summary>
-        private static int LevenshteinDistance(string s, string t)
-        {
-            int n = s.Length;
-            int m = t.Length;
-            int[,] d = new int[n + 1, m + 1];
-
-            // Step 1
-            if (n == 0) {
-                return m;
-            }
-
-            if (m == 0) {
-                return n;
-            }
-
-            // Step 2
-            for (int i = 0; i <= n; d[i, 0] = i++) {
-            }
-
-            for (int j = 0; j <= m; d[0, j] = j++) {
-            }
-
-            // Step 3
-            for (int i = 1; i <= n; i++) {
-                //Step 4
-                for (int j = 1; j <= m; j++) {
-                    // Step 5
-                    int cost = (t[j - 1] == s[i - 1]) ? 0 : 1;
-
-                    // Step 6
-                    d[i, j] = Math.Min(
-                        Math.Min(d[i - 1, j] + 1, d[i, j - 1] + 1),
-                        d[i - 1, j - 1] + cost);
-                }
-            }
-            // Step 7
-            return d[n, m];
         }
     }
 }

@@ -9,19 +9,42 @@ namespace HerbRecon
     /// </summary>
     public class TestingSession
     {
-        public delegate void TestingEndedDelegate(TestingSession sender);
-
+        /// <summary>
+        ///     RNG used to pull herbs from the list
+        /// </summary>
         private readonly Random _random = new Random();
 
-        public TestingSession(List<TestingObject> testingObjects, bool testSpecies = true, bool testFamilies = true)
+        public TestingSession(List<TestingObject> testingObjects, bool testSpecies = true, bool testFamilies = false)
         {
-            TestingEnded += TestingSession_TestingEnded;
             TestingObjects = testingObjects;
             TestSpecies = testSpecies;
             TestFamilies = testFamilies;
         }
 
+        /// <summary>
+        ///     The collection of testing objects the user is being tested from
+        /// </summary>
         private List<TestingObject> TestingObjects { get; }
+
+        /// <summary>
+        ///     Indicates if the testing ended
+        /// </summary>
+        private bool _ended;
+
+        /// <summary>
+        ///     Indicates when the testing started
+        /// </summary>
+        public DateTime StartedDateTime { get; private set; }
+
+        /// <summary>
+        ///     Indicates when the testing ended
+        /// </summary>
+        public DateTime EndedDateTime { get; private set; }
+
+        /// <summary>
+        ///     Indicates how long the testing took until now
+        /// </summary>
+        public TimeSpan TestingTime => EndedDateTime - StartedDateTime;
 
         /// <summary>
         ///     Indicates whether the user wants to learn species of the herb
@@ -33,91 +56,64 @@ namespace HerbRecon
         /// </summary>
         public bool TestFamilies { get; }
 
-        private bool HasTestingStarted { get; set; }
-        private bool HasTestingEnded { get; set; }
+        /// <summary>
+        ///     Indicates how many successful tries are required to remove the actual Herb from the tested list
+        /// </summary>
+        public int SuccessesInRowRequired { get; set; } = 3;
 
         /// <summary>
-        ///     Time when the first testing object was required
+        ///     Indicates whether <see cref="SuccessesInRowRequired"/> have to be in a row or in total
         /// </summary>
-        public DateTime TimeStarted { get; private set; }
+        public bool SuccessesHaveToBeInRow { get; set; } = true;
 
-        /// <summary>
-        ///     Time when the testing ended, i.e. the last herb was required
-        /// </summary>
-        public DateTime TimeEnded { get; private set; }
+        private TestingObject LastTestingObject { get; set; } = null;
 
+        public int TotalSuccesses { get; private set; }
+        public int TotalFails { get; private set; }
         /// <summary>
-        ///     Tells how long the testing took until now
+        ///     The current testing object in the testing session
         /// </summary>
-        public TimeSpan TestingLength
+        public TestingObject CurrentTestingObject { get; private set; } = null;
+
+        public bool GuessCurrent(string tip, string familyTip = "")
         {
-            get
-            {
-                if (!HasTestingStarted) throw new InvalidOperationException("The testing has not started yet");
-                if (HasTestingEnded) return TimeEnded - TimeStarted;
-                return DateTime.Now - TimeStarted;
+            var guessed = CurrentTestingObject.Guess(this, tip, familyTip);
+
+            if (guessed) TotalSuccesses++;
+            else TotalFails++;
+
+            if (!guessed) return false;
+            if ((SuccessesHaveToBeInRow && CurrentTestingObject.SuccessfulGuessesInRow >= SuccessesInRowRequired) ||
+                (!SuccessesHaveToBeInRow && CurrentTestingObject.TimesGuessed >= SuccessesInRowRequired)) {
+                TestingObjects.Remove(CurrentTestingObject);
             }
+            return true;
         }
 
         /// <summary>
-        ///     Triggers when the testing ends
-        /// </summary>
-        public event TestingEndedDelegate TestingEnded;
-
-        private void TestingSession_TestingEnded(TestingSession sender)
-        {
-            HasTestingEnded = true;
-            TimeEnded = DateTime.Now;
-        }
-
-        /// <summary>
-        ///     Starts the testing session and returns the first herb
+        ///     Returns the next testing object
         /// </summary>
         /// <returns></returns>
-        public Herb Start()
+        public TestingObject Next()
         {
-            if (HasTestingEnded) throw new InvalidOperationException("The testing has already ended");
-            HasTestingStarted = true;
-            TimeStarted = DateTime.Now;
-            return Next();
-        }
-
-        /// <summary>
-        ///     Finds the next herb for you, returns null if there is nothing more
-        /// </summary>
-        /// <returns></returns>
-        public Herb Next()
-        {
-            if (!HasTestingStarted)
-                throw new InvalidOperationException("The testing has to start before getting the next herb");
-            if (HasTestingEnded) throw new InvalidOperationException("The testing has already ended");
-            if (TestingObjects.Count <= 0)
-            {
-                TestingEnded?.Invoke(this);
-                return null;
+            if (_ended) return null;
+            if (TestingObjects == null || TestingObjects.Count <= 0) {
+                CurrentTestingObject = null;
+                _ended = true;
+                EndedDateTime = DateTime.Now;
+                return CurrentTestingObject;
             }
-            //todo: make a better testing object chooser
-            var selectedIndex = _random.Next(TestingObjects.Count);
-            var selectedObject = TestingObjects[selectedIndex].Object;
-            TestingObjects.RemoveAt(selectedIndex);
-            return selectedObject;
-        }
+            do {
+                CurrentTestingObject = TestingObjects[_random.Next(TestingObjects.Count)];
+                // break out if this is the first testing object provided
+                if (LastTestingObject == null) {
+                    StartedDateTime = DateTime.Now;
+                    break;
+                }
+            } while (CurrentTestingObject == LastTestingObject);
 
-        /// <summary>
-        ///     Call if the actual herb has been successfuly guessed
-        /// </summary>
-        public void Guessed()
-        {
-            
-        }
-
-
-        /// <summary>
-        ///     Call if the acutal herb has been wrongly guessed
-        /// </summary>
-        public void Failed()
-        {
-            
+            LastTestingObject = CurrentTestingObject;
+            return CurrentTestingObject;
         }
     }
 }
