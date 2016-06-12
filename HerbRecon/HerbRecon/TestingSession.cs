@@ -24,7 +24,7 @@ namespace HerbRecon
         /// <summary>
         ///     The collection of testing objects the user is being tested from
         /// </summary>
-        private List<TestingObject> TestingObjects { get; }
+        public List<TestingObject> TestingObjects { get; }
 
         /// <summary>
         ///     Indicates if the testing ended

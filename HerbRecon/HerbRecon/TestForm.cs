@@ -27,7 +27,9 @@ namespace HerbRecon
             InitializeComponent();
             _myDefaultBackColor = this.BackColor;
             TestingSession = testingSession;
-            if (!TestingSession.TestFamilies) combo_family.Enabled = false;
+            combo_family.Enabled = TestingSession.TestFamilies;
+            combo_family.Items.AddRange(TestingSession.TestingObjects.Select(o => o.Object.Family).Distinct().ToArray());
+            combo_family.Sorted = true;
             TestingSession.Next();
             LoadCurrentHerb();
             _mf = mf;
@@ -55,30 +57,34 @@ namespace HerbRecon
             if (e.KeyCode == Keys.Enter) {
                 e.Handled = true;
                 e.SuppressKeyPress = true;
-            }
-            if (e.KeyCode == Keys.Enter && !CheckingAnswer) {
-                var guessed = TestingSession.GuessCurrent(txt_answer.Text, combo_family.Text);
-                lab_wholeName.Text = TestingSession.CurrentTestingObject.Object.ToString();
-                lab_latinName.Text = TestingSession.CurrentTestingObject.Object.LatinName;
-                this.BackColor = guessed ? Color.Green : Color.Red;
-                CheckingAnswer = true;
-            }
-            else if (CheckingAnswer) {
-                this.BackColor = _myDefaultBackColor;
-                var next = TestingSession.Next();
-                if (next != null) {
-                    LoadCurrentHerb();
+                if (!CheckingAnswer) {
+                    var guessed = TestingSession.GuessCurrent(txt_answer.Text, combo_family.Text);
+                    lab_wholeName.Text = TestingSession.CurrentTestingObject.Object + ", " + TestingSession.CurrentTestingObject.Object.Family;
+                    lab_latinName.Text = TestingSession.CurrentTestingObject.Object.LatinName;
+                    this.BackColor = guessed ? Color.Green : Color.Red;
+                    txt_answer.Enabled = combo_family.Enabled = false;
+                    CheckingAnswer = true;
                 }
                 else {
-                    var message = "Testování skončilo.\n" +
-                                  $"Celkový čas: {TestingSession.TestingTime:hh\\:mm\\:ss}\n" +
-                                  $"Počet správných odpovědí: {TestingSession.TotalSuccesses}\n" +
-                                  $"Počet špatných odpovědí: {TestingSession.TotalFails}\n" +
-                                  $"Přesnost: {Math.Round((float)TestingSession.TotalSuccesses / (TestingSession.TotalSuccesses + TestingSession.TotalFails) * 100f, 2)} %";
-                    MessageBox.Show(message);
-                    this.Close();
+                    this.BackColor = _myDefaultBackColor;
+                    var next = TestingSession.Next();
+                    if (next != null) {
+                        LoadCurrentHerb();
+                    }
+                    else {
+                        var message = "Testování skončilo.\n" +
+                                      $"Celkový čas: {TestingSession.TestingTime:hh\\:mm\\:ss}\n" +
+                                      $"Počet správných odpovědí: {TestingSession.TotalSuccesses}\n" +
+                                      $"Počet špatných odpovědí: {TestingSession.TotalFails}\n" +
+                                      $"Přesnost: {Math.Round((float)TestingSession.TotalSuccesses / (TestingSession.TotalSuccesses + TestingSession.TotalFails) * 100f, 2)} %";
+                        MessageBox.Show(message);
+                        this.Close();
+                    }
+                    txt_answer.Enabled = true;
+                    txt_answer.Focus();
+                    combo_family.Enabled = TestingSession.TestFamilies;
+                    CheckingAnswer = false;
                 }
-                CheckingAnswer = false;
             }
         }
     }

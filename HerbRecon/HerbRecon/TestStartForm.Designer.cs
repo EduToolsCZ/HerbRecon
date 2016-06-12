@@ -152,7 +152,7 @@
             this.label2.TabIndex = 3;
             this.label2.Text = "Zkoušené";
             // 
-            // but_remove
+            // label1
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
@@ -204,7 +204,6 @@
             // chck_testFamilies
             // 
             this.chck_testFamilies.AutoSize = true;
-            this.chck_testFamilies.Enabled = false;
             this.chck_testFamilies.Location = new System.Drawing.Point(12, 311);
             this.chck_testFamilies.Name = "chck_testFamilies";
             this.chck_testFamilies.Size = new System.Drawing.Size(206, 17);

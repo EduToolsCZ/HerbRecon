@@ -48,16 +48,16 @@
             // 
             // combo_family
             // 
-            this.combo_family.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
-            this.combo_family.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
+            this.combo_family.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.combo_family.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.combo_family.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.combo_family.FormattingEnabled = true;
             this.combo_family.Location = new System.Drawing.Point(531, 497);
             this.combo_family.Name = "combo_family";
             this.combo_family.Size = new System.Drawing.Size(241, 26);
             this.combo_family.TabIndex = 2;
-            this.combo_family.TabStop = false;
             this.combo_family.Text = "hvězdnicovité";
+            this.combo_family.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txt_answer_KeyDown);
             // 
             // pic_herb
             // 
@@ -116,6 +116,7 @@
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Test";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txt_answer_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.pic_herb)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
