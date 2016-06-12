@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using HerbRecon.Tools;
 
 namespace HerbRecon
@@ -21,12 +22,14 @@ namespace HerbRecon
         ///     Downloads all needed images from the <see cref="HerbListManager.HerbDatabase"/> to the cache. Use <see cref="GetImage"/> to retrieve an image
         /// </summary>
         /// <returns></returns>
-        public static async Task RefreshCache()
+        public static async Task RefreshCache(ProgressBar pb = null)
         {
             var urls = HerbListManager.HerbDatabase.Herbs.Where(h => h.ImageUrls != null).SelectMany(h => h.ImageUrls).ToArray();
             if (!Directory.Exists(CachePath)) Directory.CreateDirectory(CachePath);
             using (var wc = new WebClient()) {
-                foreach (var url in urls) {
+                for (int i = 0; i < urls.Length; i++) {
+                    if(pb != null) pb.Value = (int)((float)i / urls.Length * pb.Maximum);
+                    var url = urls[i];
                     var hash = HashHelper.ComputeMd5FromString(url);
                     var filename = Path.Combine(CachePath, hash + ".png");
                     if (!File.Exists(filename)) {

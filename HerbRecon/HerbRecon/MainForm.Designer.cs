@@ -32,6 +32,7 @@
             this.lab_status = new System.Windows.Forms.Label();
             this.pic_spinner = new System.Windows.Forms.PictureBox();
             this.lab_title = new System.Windows.Forms.Label();
+            this.progressBar = new System.Windows.Forms.ProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.pic_logo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pic_spinner)).BeginInit();
             this.SuspendLayout();
@@ -78,13 +79,25 @@
             this.lab_title.Text = "H\r\ne\r\nr\r\nb\r\n\r\nR\r\ne\r\nc\r\no\r\nn";
             this.lab_title.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // progressBar
+            // 
+            this.progressBar.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.progressBar.Location = new System.Drawing.Point(0, 266);
+            this.progressBar.Maximum = 1000;
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(284, 13);
+            this.progressBar.Step = 1;
+            this.progressBar.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
+            this.progressBar.TabIndex = 4;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.ClientSize = new System.Drawing.Size(284, 266);
+            this.ClientSize = new System.Drawing.Size(284, 279);
+            this.Controls.Add(this.progressBar);
             this.Controls.Add(this.lab_title);
             this.Controls.Add(this.pic_spinner);
             this.Controls.Add(this.lab_status);
@@ -110,5 +123,6 @@
         private System.Windows.Forms.Label lab_status;
         private System.Windows.Forms.PictureBox pic_spinner;
         private System.Windows.Forms.Label lab_title;
+        private System.Windows.Forms.ProgressBar progressBar;
     }
 }

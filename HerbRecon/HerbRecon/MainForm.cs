@@ -45,8 +45,9 @@ namespace HerbRecon
             }
 
             SetStatus("Aktualizuji obrázky (může chvíli trvat)");
-            await ImageCache.RefreshCache();
-
+            progressBar.Style = ProgressBarStyle.Continuous;
+            await ImageCache.RefreshCache(progressBar);
+            progressBar.Style = ProgressBarStyle.Marquee;
             Hide();
             new MenuForm(this).Show();
         }
