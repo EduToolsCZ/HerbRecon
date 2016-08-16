@@ -1,0 +1,19 @@
+{
+  "name": "herb-recon",
+  "version": "2.0.0",
+  "description": "A tool for Czech herb learners, designed to help them to develop their herb recognition skill.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/StudentToolsGroup/HerbRecon.git"
+  },
+  "author": "Sorashi",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/StudentToolsGroup/HerbRecon/issues"
+  },
+  "homepage": "https://github.com/StudentToolsGroup/HerbRecon#readme"
+}
