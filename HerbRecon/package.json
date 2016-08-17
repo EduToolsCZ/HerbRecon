@@ -1,5 +1,6 @@
 {
   "name": "herb-recon",
+  "productName": "HerbRecon",
   "version": "2.0.0",
   "description": "A tool for Czech herb learners, designed to help them to develop their herb recognition skill.",
   "main": "app.js",
@@ -15,5 +16,13 @@
   "bugs": {
     "url": "https://github.com/StudentToolsGroup/HerbRecon/issues"
   },
-  "homepage": "https://github.com/StudentToolsGroup/HerbRecon#readme"
+  "homepage": "https://github.com/StudentToolsGroup/HerbRecon#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "electron-installer-squirrel-windows": "^1.3.0",
+    "electron-packager": "^7.6.0",
+    "electron-prebuilt": "^1.3.3",
+    "electron-squirrel-startup": "^1.0.0",
+    "electron-winstaller": "^2.3.4"
+  }
 }

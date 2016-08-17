@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>HerbRecon</title>
+	<script>
+		const {ipcRenderer} = require('electron');
+		function start(){
+			ipcRenderer.send('start', null);
+		}
+	</script>
+</head>
+<body>
+	<div onclick="start()" align="center" width="100" height="25">
+		<span style="font-size: large;font-family: Roboto, Arial">Start</span>
+	</div>
+</body>
+</html>
