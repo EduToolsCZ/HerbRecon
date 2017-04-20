@@ -7,7 +7,8 @@ HerbRecon - obecné chování aplikace
 3. [Proces zkoušení](#dd-part3)
 
 <div id="dd-part1" />
-#Instalace a auto-update
+
+# Instalace a auto-update
 **Využívá 3rd party tool**: [Squirrel for Windows](https://github.com/Squirrel/Squirrel.Windows)
 
 Proces instalace neobsahuje žádné dialogy, včetně UAC. Instalace probíhá na pozadí a
@@ -20,7 +21,8 @@ nahrazeny. Po příštím spuštění aplikace je spuštěna verze nová. Uživa
 ani upozorňován na novou verzi.
 
 <div id="dd-part2" />
-#První spuštění
+
+# První spuštění
 Po prvním spuštění je z předurčené URL staženo aktuální pole ve formátu JSON, které obsahuje objekty - byliny,
 které jsou předmětem zkoušení.
 Objekt bylina má tyto vlastnosti:
@@ -28,12 +30,13 @@ Objekt bylina má tyto vlastnosti:
 - latinský název (*Bellis perennis*)
 - čeleď (hvězdnicovité)
 - URL k obrázkům ([1](https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Bellis_perennis_dsc00906.jpg/880px-Bellis_perennis_dsc00906.jpg), [2](http://www.prvnikrok.cz/www_old/clanky/obrazky/875/002.jpg))
-    - obrázky jsou do JSON souboru vybírány náhodně, pomocí Google Api a Wikimedia Api
+    - obrázky jsou do JSON souboru vybírány náhodně, pomocí Google API a Wikimedia API
 
 Soubor je poté uložen do lokálního souborového systému a jsou sledovány jeho změny v originální lokaci na síti, pomocí jeho MD5 hashe. V případě změny je stažena nová verze.
  
-<div id="dd-part3" />    
-#Proces zkoušení
+<div id="dd-part3" />  
+
+# Proces zkoušení
 Před zahájením zkoušení je uživatel dotázán, zda chce být zkoušen z těchto oblastí (`true`/`false`):
 - pouze rod rostliny nebo i druh rostliny
 - čeleď rostliny
